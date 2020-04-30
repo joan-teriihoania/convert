@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0085)https://joan-teriihoania.fr/program/convert/updater/download.php?filename=convert.bat -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>@echo off
+@echo off
 
 :: Programmé créé par TERIIHOANIA Joan Heimanu alias heimanuter
 :: Membre de batch.xoo.it
@@ -436,4 +434,4 @@ goto:eof
     del /q "convert_changelogs.txt" &gt; nul
   )
   echo.
-goto:eof</version.txt></filename^></filename^></body></html>
+goto:eof
