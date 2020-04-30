@@ -18,7 +18,7 @@ Cette commande a été développée sous Windows 10 64 bits. Aucun autre environ
 
 # Installation
 ## Téléchargement
-Vous pouvez télécharger `convert` (*dernière version*) en allant [ici](https://joan-teriihoania.fr/updater/download.php?filename=convert.bat&download=true).
+Vous pouvez télécharger `convert` (*dernière version*) en allant [ici](https://joan-teriihoania.fr/program/convert/updater/download.php?filename=convert.bat&download=true).
 > **Important :** Les versions antérieures sont écrasées et effacées. Si une mise à jour échoue, téléchargez la nouvelle version depuis le lien précédent.
 
 ## Installation

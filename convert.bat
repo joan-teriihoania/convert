@@ -1,3 +1,4 @@
+
 @echo off
 
 :: Programmé créé par TERIIHOANIA Joan Heimanu alias heimanuter
@@ -35,9 +36,9 @@ set replacement_main_tex_file=%temp_dir%\Main.tex
 set exit_code=0
 echo.
 
-if exist "convert_changelogs.txt" del /q "convert_changelogs.txt" &gt; nul
+if exist "convert_changelogs.txt" del /q "convert_changelogs.txt" > nul
 ::if exist updater.bat echo [INFO] Version %version% installed with success !
-if exist updater.bat del /q updater.bat &gt; nul
+if exist updater.bat del /q updater.bat > nul
 
 if "%~1" equ "" (
   echo [INFO] Convert version %version% created by TERIIHOANIA Joan Heimanu - 2020
@@ -81,7 +82,7 @@ if "%~1" equ "--install-pdflatex" (
 )
 
 if "%~1" equ "--check-update" (
-  call :check_version &gt; nul
+  call :check_version > nul
   call :check_version
   exit /b
 )
@@ -93,9 +94,9 @@ if "%~1" equ "/?" (
 )
 
 if "%~1" equ "--temp-reset" (
-  if not exist "%temp_dir%\reset.log" echo test &gt; "%temp_dir%\reset.log"
+  if not exist "%temp_dir%\reset.log" echo test > "%temp_dir%\reset.log"
   echo [INFO] Resetting temp folder...
-  del /s /q "%temp_dir%\"&gt; nul
+  del /s /q "%temp_dir%\"> nul
   if exist "%temp_dir%\reset.log" echo [ERRO] Reset operation failed
   if not exist "%temp_dir%\reset.log" echo [INFO] Reset operation complete
   echo.
@@ -125,9 +126,9 @@ if "%~1" equ "--replace-main" (
   if not exist "%~2" exit /b
 
   echo [INFO] Replacing main Latex file by "%~2"...
-  if exist "%temp_dir%\Main.tex" del /q "%temp_dir%\Main.tex" &gt; nul
-  if exist "%temp_dir%\%~2" del /q "%temp_dir%\%~2" &gt; nul
-  copy "%~2" "%temp_dir%" &gt; nul
+  if exist "%temp_dir%\Main.tex" del /q "%temp_dir%\Main.tex" > nul
+  if exist "%temp_dir%\%~2" del /q "%temp_dir%\%~2" > nul
+  copy "%~2" "%temp_dir%" > nul
   set local_path=%~dp0
   cd /d "%temp_dir%"
   ren "%~2" "Main.tex"
@@ -149,26 +150,26 @@ GOTO :args_load_loop
 :args_load_loop_end_point
 
 set command_needed=0
-WHERE powershell &gt;nul 2&gt;nul
+WHERE powershell >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
   echo [ERRO] The command 'powershell' is not installed.
   set command_needed=1
 )
 
-WHERE pdflatex &gt;nul 2&gt;nul
+WHERE pdflatex >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
   echo [ERRO] The command 'pdflatex' is not installed.
   echo [INFO] Use '--install-pdflatex' option to install ^(Windows only^).
   set command_needed=1
 )
 
-WHERE pandoc &gt;nul 2&gt;nul
+WHERE pandoc >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
   echo [ERRO] The command 'pandoc' is not installed.
   set command_needed=1
 )
 
-WHERE py &gt;nul 2&gt;nul
+WHERE py >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
   echo [ERRO] The command 'py' is not installed.
   set command_needed=1
@@ -203,11 +204,11 @@ if not exist "%temp_dir%" (
 )
 
 if exist "%temp_latex_filename%" (
-  del /q "%temp_dir%\%latex_filename%" &gt; nul
+  del /q "%temp_dir%\%latex_filename%" > nul
 )
 
 echo [INFO] Converting markdown to Latex...
-pandoc -f gfm -t latex "%input_filename%"&gt;"%temp_latex_filename%"
+pandoc -f gfm -t latex "%input_filename%">"%temp_latex_filename%"
 if not exist "%temp_latex_filename%" (
   echo [ERRO]  Conversion to LATEX failed
   set exit_code=2
@@ -219,7 +220,7 @@ echo [INFO] Reformatting Latex file...
 
 if not exist "%temp_dir%\format.py" (
   echo [INFO] Downloading formatting script...
-  powershell -Command "Invoke-WebRequest %download_link%?filename=format.py -OutFile %temp_dir%\format.py -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=format.py -OutFile %temp_dir%\format.py -Headers @{'Cache-Control'='no-cache'}" > nul
   if not exist "%temp_dir%\format.py" echo [ERRO]  The formatting script could not be downloaded
   if not exist "%temp_dir%\format.py" set exit_code=7
   if not exist "%temp_dir%\format.py" goto exit
@@ -238,16 +239,16 @@ if exist "%output_filename%.pdf" if "%overwrite%" neq "true" (
 
 if not exist "%temp_dir%\Main.tex" (
   echo [INFO] Downloading template file...
-  powershell -Command "Invoke-WebRequest %download_link%?filename=Main.tex -OutFile %temp_dir%\Main.tex -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=Main.tex -OutFile %temp_dir%\Main.tex -Headers @{'Cache-Control'='no-cache'}" > nul
   if not exist "%temp_dir%\Main.tex" echo [ERRO]  The template file could not be downloaded
   if not exist "%temp_dir%\Main.tex" set exit_code=5
   if not exist "%temp_dir%\Main.tex" goto exit
   echo [INFO] Template file downloaded with success
 )
 
-if exist "%output_filename%.pdf" del /q "%output_filename%.pdf" &gt; nul
+if exist "%output_filename%.pdf" del /q "%output_filename%.pdf" > nul
 if "%pdflatex_logs%" equ "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%"
-if "%pdflatex_logs%" neq "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%" &gt; nul
+if "%pdflatex_logs%" neq "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%" > nul
 
 if not exist "%output_filename%.pdf" (
   echo [ERRO]  Conversion to PDF failed
@@ -256,9 +257,9 @@ if not exist "%output_filename%.pdf" (
 )
 
 echo [INFO] Updating TOC from PDF...
-del /q "%output_filename%.pdf" &gt; nul
+del /q "%output_filename%.pdf" > nul
 if "%pdflatex_logs%" equ "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%"
-if "%pdflatex_logs%" neq "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%" &gt; nul
+if "%pdflatex_logs%" neq "true" pdflatex "%replacement_main_tex_file%" --job-name="%output_filename%" --aux-directory="%temp_dir%" > nul
 
 if not exist "%output_filename%.pdf" (
   echo [ERRO]  Conversion to PDF failed
@@ -281,8 +282,8 @@ goto exit
   echo Syntax: %~n0 [option]
   echo.
   echo Options :
-  echo   --input ^<filename^>
-  echo   --output ^<filename^>
+  echo   --input ^<Filename^>
+  echo   --output ^<Filename^>
   echo.
   echo   --overwrite        : Option to overwrite, disabled by default, the contentof any file
   echo                        named as the given output filename with the result of the conversion.
@@ -317,20 +318,35 @@ goto exit
   echo IMPORTANT : If your installation is outdated, can't update or has unresolvable execution
   echo             issues, please consider download a newer version with the following link :
   echo.
-  echo https://joan-teriihoania.fr/program/convert/updater/download.php?filename=convert.bat^&amp;download=true
+  echo https://joan-teriihoania.fr/program/convert/updater/download.php?filename=convert.bat^&download=true
   echo.
 goto:eof
 
 
 :check_version
-  if exist version.txt del /q "version.txt" &gt; nul
-  powershell -Command "Invoke-WebRequest %download_link%?filename=version.txt -OutFile version.txt -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  if exist version.txt del /q "version.txt" > nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=version.txt -OutFile version.txt -Headers @{'Cache-Control'='no-cache'}" > nul
 
   if exist version.txt (
     set last_version=0
-    set /p last_version=<version.txt if="" "%last_version%"="" equ="" "0"="" goto="" :check_version="" ""="" gtr="" "%version%"="" echo="" [info]="" [!]="" new="" version="" ^(%last_version%^)="" available.="" use="" '--update'="" option="" to="" update.="" '--changelogs'="" get="" the="" changelogs.="" your="" is="" up-to-date.="" )="" not="" exist="" version.txt="" [erro]="" latest="" index="" could="" be="" downloaded.="" exit="" b="" del="" q="" "version.txt"=""> nul
-  echo|set /P ="%date%"&gt;"%temp_dir%\convert_last_version_check.log"
-  echo|set /P ="%last_version%"&gt;"%temp_dir%\convert_last_version.log"
+    set /p last_version=<version.txt
+    if "%last_version%" equ "0" goto :check_version
+    if "%last_version%" equ "" goto :check_version
+    
+    if "%last_version%" gtr "%version%" echo [INFO] [!] New version ^(%last_version%^) available.
+    if "%last_version%" gtr "%version%" echo [INFO] [!] Use '--update' option to update.
+    if "%last_version%" gtr "%version%" echo [INFO] [!] Use '--changelogs' to get the changelogs.
+
+    if "%last_version%" equ "%version%" echo [INFO] Your version is up-to-date.
+  )
+  
+  if not exist version.txt echo [ERRO] The latest version index could not be downloaded.
+  if not exist version.txt goto exit
+  if not exist version.txt exit /b
+  
+  if exist version.txt del /q "version.txt" > nul
+  echo|set /P ="%date%">"%temp_dir%\convert_last_version_check.log"
+  echo|set /P ="%last_version%">"%temp_dir%\convert_last_version.log"
 goto:eof
 
 
@@ -347,13 +363,13 @@ goto:eof
   exit /b
 
 :auto_check_version
-  if not exist "%temp_dir%\convert_last_version_check.log" echo|set /P ="boot"&gt;"%temp_dir%\convert_last_version_check.log"
-    if not exist "%temp_dir%\convert_last_version.log" echo|set /P ="%version%"&gt;"%temp_dir%\convert_last_version.log"
+  if not exist "%temp_dir%\convert_last_version_check.log" echo|set /P ="boot">"%temp_dir%\convert_last_version_check.log"
+    if not exist "%temp_dir%\convert_last_version.log" echo|set /P ="%version%">"%temp_dir%\convert_last_version.log"
     
-    set /p convert_last_version_check=&lt;%temp_dir%\convert_last_version_check.log
-    set /p last_version_checked=&lt;%temp_dir%\convert_last_version.log
+    set /p convert_last_version_check=<%temp_dir%\convert_last_version_check.log
+    set /p last_version_checked=<%temp_dir%\convert_last_version.log
     
-    if "%convert_last_version_check%" neq "%date%" call :check_version &gt; nul
+    if "%convert_last_version_check%" neq "%date%" call :check_version > nul
     if "%convert_last_version_check%" neq "%date%" call :check_version
     if "%convert_last_version_check%" equ "%date%" (
       if "%last_version_checked%" gtr "%version%" echo [INFO] [!] New version ^(%last_version_checked%^) available.
@@ -363,19 +379,19 @@ goto:eof
   goto:eof
 
 :--update
-  call :check_version &gt; nul
-  call :check_version &gt; nul
-  if exist "_%~n0%~x0" del /q "_%~n0%~x0" &gt; nul
+  call :check_version > nul
+  call :check_version > nul
+  if exist "_%~n0%~x0" del /q "_%~n0%~x0" > nul
   echo [INFO] Downloading latest version...
-  powershell -Command "Invoke-WebRequest %download_link%?filename=convert.bat -OutFile _%~n0%~x0 -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=convert.bat -OutFile _%~n0%~x0 -Headers @{'Cache-Control'='no-cache'}" > nul
   if exist "_%~n0%~x0" echo [INFO] Download complete
   if not exist "_%~n0%~x0" echo [ERRO] Latest version file could not be downloaded
   if not exist "_%~n0%~x0" goto exit
   if not exist "_%~n0%~x0" exit /b
 
-  if exist "updater.bat" del /q "updater.bat" &gt; nul
+  if exist "updater.bat" del /q "updater.bat" > nul
   echo [INFO] Downloading updater...
-  powershell -Command "Invoke-WebRequest %download_link%?filename=updater.bat -OutFile updater.bat -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=updater.bat -OutFile updater.bat -Headers @{'Cache-Control'='no-cache'}" > nul
   if exist "_%~n0%~x0" echo [INFO] Download complete
   if not exist "_%~n0%~x0" echo [ERRO] Updater could not be downloaded
   if not exist "_%~n0%~x0" goto exit
@@ -384,26 +400,26 @@ goto:eof
   start updater.bat %~n0%~x0
 
   echo [INFO] Update to version %last_version% complete
-  echo|set /P ="%date%"&gt;"%temp_dir%\convert_last_version_check.log"
-  echo|set /P ="%last_version%"&gt;"%temp_dir%\convert_last_version.log"
+  echo|set /P ="%date%">"%temp_dir%\convert_last_version_check.log"
+  echo|set /P ="%last_version%">"%temp_dir%\convert_last_version.log"
 goto:eof
 
 
 :--install-pdflatex
-  WHERE pdflatex &gt;nul 2&gt;nul
+  WHERE pdflatex >nul 2>nul
   IF %ERRORLEVEL% EQU 0 echo [INFO] pdflatex is already installed
   IF %ERRORLEVEL% EQU 0 goto exit
   IF %ERRORLEVEL% EQU 0 exit /b
 
   echo [INFO] This operation may take several minutes.
   echo [INFO] Downloading installer utility...
-  if not exist miktexsetup-x64.zip powershell -Command "Invoke-WebRequest https://miktex.org/download/win/miktexsetup-x64.zip -OutFile miktexsetup-x64.zip -Headers @{'Cache-Control'='no-cache'}" &gt; nul
+  if not exist miktexsetup-x64.zip powershell -Command "Invoke-WebRequest https://miktex.org/download/win/miktexsetup-x64.zip -OutFile miktexsetup-x64.zip -Headers @{'Cache-Control'='no-cache'}" > nul
   if not exist miktexsetup-x64.zip echo [ERRO] Installer utility could not be downloaded.
   if not exist miktexsetup-x64.zip goto exit
   if not exist miktexsetup-x64.zip exit /b
 
   echo [INFO] Expanding installer utility...
-  if exist   del /q "%temp_dir%\miktexsetup.exe" &gt; nul
+  if exist   del /q "%temp_dir%\miktexsetup.exe" > nul
   powershell -Command "Expand-Archive -Force miktexsetup-x64.zip %temp_dir%\"
   if not exist "%temp_dir%\miktexsetup.exe" echo [ERRO] Installer utility could not be expanded.
   if not exist "%temp_dir%\miktexsetup.exe" goto exit
@@ -423,15 +439,15 @@ goto:eof
 
 :--changelogs
   echo [INFO] Downloading changelogs...
-  if exist convert_changelogs.txt del /q convert_changelogs.txt &gt; nul
-  powershell -Command "Invoke-WebRequest %download_link%?filename=changelogs.txt -OutFile convert_changelogs.txt" &gt; nul
+  if exist convert_changelogs.txt del /q convert_changelogs.txt > nul
+  powershell -Command "Invoke-WebRequest %download_link%?filename=changelogs.txt -OutFile convert_changelogs.txt" > nul
 
   if not exist "convert_changelogs.txt" echo [INFO] The changelogs could not be downloaded.
   if exist "convert_changelogs.txt" (
     echo.
     type convert_changelogs.txt
     echo.
-    del /q "convert_changelogs.txt" &gt; nul
+    del /q "convert_changelogs.txt" > nul
   )
   echo.
 goto:eof
