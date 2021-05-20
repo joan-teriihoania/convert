@@ -20,7 +20,7 @@ Rem ---------------------- Copyright ----------------------------------
 
 Rem ---------------------- Copyright ----------------------------------
 
-set version=1587325122
+set version=1609848361
 set exitted=false
 
 set download_link=http://joan-teriihoania.fr/program/convert/updater/download.php
@@ -30,6 +30,8 @@ set overwrite=false
 set pdflatex_logs=false
 
 set temp_dir=%temp%\rapport_temp
+if not exist "%temp_dir%" (md "%temp_dir%")
+
 set latex_filename=Latex.tex
 set temp_latex_filename=%temp_dir%\%latex_filename%
 set replacement_main_tex_file=%temp_dir%\Main.tex
